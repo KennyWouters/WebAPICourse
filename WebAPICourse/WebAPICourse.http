@@ -1,6 +1,19 @@
-@WebAPICourse_HostAddress = http://localhost:5278
+@WebAPICourse_HostAddress = https://localhost:7230
 
 GET {{WebAPICourse_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+POST {{WebAPICourse_HostAddress}}/api/shirts
+Accept: application/json
+
+{
+    "ShirtId" : 1,
+    "Brand" : "MyBrand",
+    "Color" : "Red",
+    "Gender" : "Male"
+
+}
 
 ###

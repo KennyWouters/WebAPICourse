@@ -22,9 +22,9 @@ namespace WebAPICourse.Controllers
         }
 
         [HttpPost]
-        public string CreateShirt([FromForm] Shirt shirt)
+        public string CreateShirt([FromBody] Shirt shirt)
         {
-            return $"Created shirt with data: {shirt}";
+            return $"Created shirt with data";
         }
 
         [HttpPut("{id}")]
