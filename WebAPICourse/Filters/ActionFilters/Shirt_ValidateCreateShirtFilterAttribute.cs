@@ -4,7 +4,7 @@ using WebAPICourse.Models;
 using WebAPICourse.Models.Repositories;
 
 
-namespace WebAPICourse.Filters
+namespace WebAPICourse.Filters.ActionFilters
 {
     public class Shirt_ValidateCreateShirtFilterAttribute : ActionFilterAttribute
     {

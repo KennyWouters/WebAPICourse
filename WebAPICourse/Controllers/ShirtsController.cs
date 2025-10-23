@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAPICourse.Filters;
+using WebAPICourse.Filters.ActionFilters;
+using WebAPICourse.Filters.ExceptionFilters;
 using WebAPICourse.Models;
 using WebAPICourse.Models.Repositories;
 
@@ -37,25 +38,23 @@ namespace WebAPICourse.Controllers
         [HttpPut("{id}")]
         [Shirt_ValidateShirtIdFilter]
         [Shirt_ValidateShirtUpdateFilter]
+        [Shirt_HandleUpdateExceptionsFilter]
         public IActionResult UpdateShirt(int id, Shirt shirt)
         {
-            try
-            {
-                ShirtRepository.UpdateShirt(shirt);
-            }
-            catch
-            {
-                if (!ShirtRepository.ShirtExists(id)) return NotFound($"Shirt with ID {id} not found.");
+            ShirtRepository.UpdateShirt(shirt);
 
-                throw;
-            }
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public string DeleteShirt(int id)
+        [Shirt_ValidateShirtIdFilter]
+
+        public IActionResult DeleteShirt(int id)
         {
-            return $"Deleted shirt with ID: {id}";
+            var shirt = ShirtRepository.GetShirtById(id);
+            ShirtRepository.DeleteShirt(id);
+            return Ok(shirt);
+
         }
 
 
