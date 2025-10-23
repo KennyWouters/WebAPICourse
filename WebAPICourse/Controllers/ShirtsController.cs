@@ -25,15 +25,9 @@ namespace WebAPICourse.Controllers
         }
 
         [HttpPost]
+        [Shirt_ValidateCreateShirtFilter]
         public IActionResult CreateShirt([FromBody] Shirt shirt)
         {
-            if (shirt == null) return BadRequest();
-
-            var existingShirt = ShirtRepository.GetShirtByProperties(shirt.Brand, shirt.Color, shirt.Gender, shirt.Size);
-
-            if (existingShirt != null) return BadRequest();
-
-
             ShirtRepository.CreateShirt(shirt);
             return CreatedAtAction(nameof(GetShirtById),
                 new { id = shirt.ShirtId },
@@ -41,9 +35,21 @@ namespace WebAPICourse.Controllers
         }
 
         [HttpPut("{id}")]
-        public string UpdateShirt(int id, string shirtData)
+        [Shirt_ValidateShirtIdFilter]
+        [Shirt_ValidateShirtUpdateFilter]
+        public IActionResult UpdateShirt(int id, Shirt shirt)
         {
-            return $"Updated shirt with ID: {id} to data: {shirtData}";
+            try
+            {
+                ShirtRepository.UpdateShirt(shirt);
+            }
+            catch
+            {
+                if (!ShirtRepository.ShirtExists(id)) return NotFound($"Shirt with ID {id} not found.");
+
+                throw;
+            }
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
