@@ -12,9 +12,9 @@ namespace WebAPICourse.Controllers
     {
 
         [HttpGet]
-        public string GetShirts()
+        public IActionResult GetShirts()
         {
-            return "List of shirts";
+            return Ok(ShirtRepository.GetAllShirts());
         }
 
         [HttpGet("{id}")]
@@ -25,9 +25,19 @@ namespace WebAPICourse.Controllers
         }
 
         [HttpPost]
-        public string CreateShirt([FromBody] Shirt shirt)
+        public IActionResult CreateShirt([FromBody] Shirt shirt)
         {
-            return $"Created shirt with data";
+            if (shirt == null) return BadRequest();
+
+            var existingShirt = ShirtRepository.GetShirtByProperties(shirt.Brand, shirt.Color, shirt.Gender, shirt.Size);
+
+            if (existingShirt != null) return BadRequest();
+
+
+            ShirtRepository.CreateShirt(shirt);
+            return CreatedAtAction(nameof(GetShirtById),
+                new { id = shirt.ShirtId },
+                shirt);
         }
 
         [HttpPut("{id}")]
