@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAPICourse.Filters;
 using WebAPICourse.Models;
+using WebAPICourse.Models.Repositories;
 
 namespace WebAPICourse.Controllers
 {
@@ -16,9 +18,10 @@ namespace WebAPICourse.Controllers
         }
 
         [HttpGet("{id}")]
-        public string GetShirtById(int id)
+        [Shirt_ValidateShirtIdFilter]
+        public IActionResult GetShirtById(int id)
         {
-            return $"Shirt with ID: {id}";
+            return Ok(ShirtRepository.GetShirtById(id));
         }
 
         [HttpPost]
