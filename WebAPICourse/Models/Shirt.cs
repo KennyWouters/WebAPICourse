@@ -1,17 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebAPICourse.Models.Validations;
+using Webapp.Models.Validations;
 
 
-namespace WebAPICourse.Models
+namespace Webapp.Models
 {
     public class Shirt
     {
 
         public int ShirtId { get; set; }
-
         [Required]
         public string? Color { get; set; }
-
         [Shirt_EnsureCorrectSizing]
         public int? Size { get; set; }
         [Required]

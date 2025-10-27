@@ -1,9 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using Webapp.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ShirtStoreManagement"));
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

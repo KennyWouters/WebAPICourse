@@ -1,4 +1,4 @@
-namespace WebAPICourse
+namespace Webapp
 {
     public class WeatherForecast
     {

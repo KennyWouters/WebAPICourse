@@ -1,11 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using WebAPICourse.Models.Repositories;
+using Webapp.Data;
 
-namespace WebAPICourse.Filters.ActionFilters
+namespace Webapp.Filters.ActionFilters
 {
     public class Shirt_ValidateShirtIdFilterAttribute : ActionFilterAttribute
     {
+        private readonly ApplicationDbContext dbContext;
+
+        public Shirt_ValidateShirtIdFilterAttribute(ApplicationDbContext dbContext)
+        {
+
+            this.dbContext = dbContext;
+        }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
@@ -24,17 +32,24 @@ namespace WebAPICourse.Filters.ActionFilters
                     context.Result = new BadRequestObjectResult(problemDetails);
 
                 }
-                else if (!ShirtRepository.ShirtExists(shirtId.Value))
+                else
                 {
-                    context.ModelState.AddModelError("ShirtId", $"Shirt with id {shirtId.Value} was not found.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+                    var shirt = dbContext.Shirts.Find(shirtId.Value);
+                    if (shirt == null)
                     {
-                        Status = StatusCodes.Status404NotFound
-                    };
-                    context.Result = new NotFoundObjectResult(problemDetails);
+                        context.ModelState.AddModelError("ShirtId", "Shirt doesn't exist.");
+                        var problemDetails = new ValidationProblemDetails(context.ModelState)
+                        {
+                            Status = StatusCodes.Status404NotFound
+                        };
+                        context.Result = new NotFoundObjectResult(problemDetails);
+                    }
+                    else
+                    {
+                        context.HttpContext.Items["shirt"] = shirt;
+                    }
                 }
             }
-
         }
     }
 }

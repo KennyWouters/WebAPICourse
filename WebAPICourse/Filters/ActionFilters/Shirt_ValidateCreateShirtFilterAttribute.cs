@@ -1,13 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using WebAPICourse.Models;
-using WebAPICourse.Models.Repositories;
+using Webapp.Data;
+using Webapp.Models;
 
 
-namespace WebAPICourse.Filters.ActionFilters
+namespace Webapp.Filters.ActionFilters
 {
     public class Shirt_ValidateCreateShirtFilterAttribute : ActionFilterAttribute
     {
+        private readonly ApplicationDbContext dbContext;
+
+        public Shirt_ValidateCreateShirtFilterAttribute(ApplicationDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
@@ -24,7 +31,20 @@ namespace WebAPICourse.Filters.ActionFilters
             }
             else
             {
-                var existingShirt = ShirtRepository.GetShirtByProperties(shirt.Brand, shirt.Color, shirt.Gender, shirt.Size);
+                var existingShirt = dbContext.Shirts.FirstOrDefault(x =>
+                !string.IsNullOrWhiteSpace(shirt.Brand) &&
+                !string.IsNullOrWhiteSpace(x.Brand) &&
+                x.Brand.ToLower() == shirt.Brand.ToLower() &&
+                !string.IsNullOrWhiteSpace(shirt.Gender) &&
+                !string.IsNullOrWhiteSpace(x.Gender) &&
+                x.Gender.ToLower() == shirt.Gender.ToLower() &&
+                !string.IsNullOrWhiteSpace(shirt.Color) &&
+                !string.IsNullOrWhiteSpace(x.Color) &&
+                x.Color.ToLower() == shirt.Color.ToLower() &&
+                shirt.Size.HasValue &&
+                x.Size.HasValue &&
+                shirt.Size.Value == x.Size.Value
+                );
                 if (existingShirt != null)
                 {
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using WebAPICourse.Models;
+using Webapp.Models;
 
-namespace WebAPICourse.Filters.ActionFilters
+namespace Webapp.Filters.ActionFilters
 {
     public class Shirt_ValidateShirtUpdateFilterAttribute : ActionFilterAttribute
     {

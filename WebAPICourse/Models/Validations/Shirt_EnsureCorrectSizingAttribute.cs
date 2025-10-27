@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebAPICourse.Models.Validations
+namespace Webapp.Models.Validations
 {
     public class Shirt_EnsureCorrectSizingAttribute : ValidationAttribute
     {
